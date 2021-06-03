@@ -12,4 +12,4 @@ Using the CDC Data [https://www.kaggle.com/spittman1248/cdc-data-nutrition-physi
 
 ### Third Proposal
 
-https://www.kaggle.com/open-flights/flight-route-database
+Using the OpenFlights data [https://www.kaggle.com/open-flights/flight-route-database] I will analyze the differences between flights and the tardiness depending on the amount of stops.  
