@@ -5,6 +5,7 @@ import pandas as pd
 import seaborn as sns
 import scipy.stats as stats
 from matplotlib.lines import Line2D
+from KEY import key
 
 API_ENDPOINT = 'https://api.spotify.com/v1/'
 
@@ -15,7 +16,7 @@ plt.style.use('seaborn')
 class Spotify():
 
     def __init__(self):
-        access_token = requests.post('https://accounts.spotify.com/api/token', data={'grant_type': 'client_credentials'}, headers={'Authorization': 'Basic ZDc5ODJhZDhjMzYyNDVjM2FhNjRmZjllN2YxNzQwZDY6MWUyYjE0Y2ZlMjU2NDZkM2ExYzkyYjZlMTA4YWM2M2M=', 'Content-type': 'application/x-www-form-urlencoded'}).json()['access_token']
+        access_token = requests.post('https://accounts.spotify.com/api/token', data={'grant_type': 'client_credentials'}, headers={'Authorization': f'Basic {key}', 'Content-type': 'application/x-www-form-urlencoded'}).json()['access_token']
         self.access_token_header = f"Bearer {access_token}"
 
     def GetTrackID(self, query='Pink Matter'):
