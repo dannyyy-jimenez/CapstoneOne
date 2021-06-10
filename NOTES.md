@@ -1,0 +1,38 @@
+# Notes on data (At a Glance)
+-------------
+
+- Popularity vs Explict has no relationship
+- Popularity vs Danceability
+  - There appears to be a small positive correlation between danceability and popularity
+  - Straight line to be removed at x = 0
+  - Straight line to be removed at y = 0
+- Popularity vs energy
+  - There appears to be a small curve that increases as energy goes up but then decreases after energy > 0.8
+  - Straight line to be removed at x = 0
+  - Straight line to be removed at y = 0
+- Popularity vs Key is very uniform  and has no relationship
+- Popularity vs Loudness
+  - Very clear relationship between the two
+  - Line to be removed at y = 0
+- Popularity vs Mode has no relationship
+- Popularity vs Speechiness
+  - line to be removed at y ~ 38
+  - line to be removed at y ~ 0
+  - line to be removed at y ~ 30
+- Popularity vs Acousticness
+  - Minor relationship between less acoustic more popular
+- Popularity vs Intrumentalness
+  - line to be removed at x = 0
+  - clear division in the middle 50%
+- Popularity vs Liveliness
+  - might be due to the higher length songs (look into liveliness vs length)
+  - less live songs are more popular
+- Popularity vs Valence
+  - line to be removed at x = 0
+  - line to be removed at x = 0.02
+  - line to be removed at x = 0.98
+- Popularity vs Tempo
+  - line to be removed at x = 0
+  - other than that not so much of a relationship
+- Popularity vs Duration
+  - obvious relationship 
