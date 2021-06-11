@@ -236,7 +236,7 @@ class Spotify():
             return 'Duration (min)'
         return ' '.join([metric.capitalize() for metric in metric.split("_")])
 
-    def Scatter(self, tracks, dependent='popularity', metrics=['explicit', 'danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration'], labelize=False, save=False, nameAppend=""):
+    def Scatter(self, tracks, dependent='popularity', metrics=['explicit', 'danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration'], labelize=False, save=False, sample=1, nameAppend=""):
         """Create various scatter plots for each metric
 
         Parameters
@@ -264,8 +264,9 @@ class Spotify():
         fig, axs = plt.subplots(len(metrics), figsize=(10, 6*len(metrics)))
 
         colors = np.random.rand(len(tracks), 3)
-        labels = tracks['name'].values
-        y = tracks[dependent].values
+        samples_indexes = np.random.choice(range(len(tracks[dependent].values)), replace=False, size=int(len(tracks[dependent].values) * sample))
+        labels = tracks['name'][samples_indexes].values
+        y = tracks[dependent][samples_indexes]
         legend_elements = []
         tracks_enum = enumerate([axs]) if len(metrics) == 1 else enumerate(axs.flatten())
 
@@ -274,11 +275,11 @@ class Spotify():
 
         for idx, ax in tracks_enum:
             if labelize:
-                ax.scatter(x=tracks[metrics[idx]], y=y, c=colors)
+                ax.scatter(x=tracks[metrics[idx]][samples_indexes], y=y, c=colors)
                 # for i in range(len(labels)):
                 #     ax.annotate(labels[i], (tracks[metrics[idx]][i], y[i]))
             else:
-                ax.scatter(x=tracks[metrics[idx]], y=y, alpha=0.1)
+                ax.scatter(x=tracks[metrics[idx]][samples_indexes], y=y, alpha=0.1)
 
             ax.set_ylabel(self.FormatMetric(dependent))
             ax.set_xlabel(self.FormatMetric(metrics[idx]))
@@ -289,7 +290,7 @@ class Spotify():
         fig.tight_layout()
 
         if save:
-            filename = f"../plots/popularity-vs-{'_'.join(metrics)}-{nameAppend}"
+            filename = f"../plots/{dependent}-vs-{'_'.join(metrics)}-{nameAppend}"
             fig.savefig(filename)
 
     def Hist(self, tracks, metrics=['popularity'], save=False, nameAppend="", labels=None, stacks=[], alpha=1):
@@ -347,6 +348,22 @@ class Spotify():
 
         if save:
             filename = f"../plots/popularity-hist-{nameAppend}"
+            fig.savefig(filename)
+
+    def BoxPlot(self, tracks, metrics=['popularity'], save=False, nameAppend="", showfliers=False, vert=False):
+        if isinstance(tracks, list):
+            tracks = pd.DataFrame(tracks)
+
+        fig, axs = plt.subplots(len(metrics), figsize=(7, 7*len(metrics)))
+        tracks_enum = enumerate([axs]) if len(metrics) == 1 else enumerate(axs.flatten())
+
+        for idx, ax in tracks_enum:
+            ax.boxplot(tracks[metrics[idx]], showfliers=showfliers, vert=vert)
+            ax.set_xlabel(self.FormatMetric(metrics[idx]))
+            ax.set_title(f'{self.FormatMetric(metrics[idx])}')
+        fig.tight_layout()
+        if save:
+            filename = f"../plots/{'_'.join(metrics)}-hist-{nameAppend}"
             fig.savefig(filename)
 
     def CatScatter(self, tracks, x='explicit', y='popularity', sample=0.2):
@@ -456,7 +473,7 @@ class Spotify():
         else:
             artists_norm_x = np.linspace(artist_two_tracks_pop_mean - (4 * artist_two_tracks_pop_ste), artist_one_tracks_pop_mean + (4 * artist_one_tracks_pop_ste), 100000)
 
-        pvalue = (stats.ttest_ind(artists[0]['analysis'][metric], artists[1]['analysis'][metric], equal_var=False).pvalue) / 2
+        pvalue = round((stats.ttest_ind(artists[0]['analysis'][metric], artists[1]['analysis'][metric], equal_var=False).pvalue) / 2, 3)
 
         fig, ax = plt.subplots(1, figsize=(7, 7))
         ax.text(0.1, 0.8, f'p-value: {pvalue}', fontsize=14, transform=ax.transAxes, bbox=dict(boxstyle='round', facecolor='orange', alpha=0.5))
@@ -472,6 +489,8 @@ class Spotify():
 
         return pvalue
 
+    def JointPlot(self, tracks, dependent="popularity", metric='danceability'):
+        sns.jointplot(x=metric, y=dependent, data=tracks, kind="hex")
 
 if __name__ == "__main__":
     spotify = Spotify()
@@ -484,4 +503,6 @@ if __name__ == "__main__":
     steezy_la_flame = spotify.GetTracksAnalysis('Bad Bunny')
     benji = spotify.GetTracksAnalysis('Mike Towers')
 
-    spotify.CompareArtistsCLT([benji, steezy_la_flame], labels=['6enji', 'SteezyLaFlame'])
+    steezy_la_flame['analysis']['popularity']
+
+    spotify.JointPlot(steezy_la_flame['analysis'])

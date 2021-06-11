@@ -41,6 +41,14 @@ NOTE: The Spotify API auth key is also missing for security purposes. In order t
 
 ### Visualizing the Data
 
+![Release Year Amounts](./plots/release-year-hist-over-the-years.png)
+
+![Boxplot Duration](./plots/boxplot-duration.png)
+
+![Boxplot Danceability](./plots/boxplot-danceability.png)
+
+Note: The boxplots exclude outliers
+
 ![Change in Popularity Over Time](./plots/years-plotted-popularity.png)
 
 ![Change in Explicit Over Time](./plots/years-plotted-explicit.png)
@@ -91,23 +99,6 @@ NOTE: The Spotify API auth key is also missing for security purposes. In order t
 
 ![CLT for Duration](./plots/duration_popularity_clt_norm.png)
 
----
-
-## Confidence Intervals
-
-### Danceability in 2021
-
-![Hist of 2021 Danceability](./plots/popularity-hist-danceability-2021.png)
-
-* 95% Confidence Interval
-  * Lower Boundary: __0.657__
-  * Upper Boundary: __0.69__
-
-With 95% confidence I can say the mean danceability distribution for songs in 2021 is so far between 0.657 and 0.69. __It would be very surprising if by the end of the year the mean popularity was higher than 0.7__.
-
-![Hist of 2021 Danceability](./plots/danceability-2021.png)
-
----
 
 ## Spotfiy API
 
@@ -187,7 +178,7 @@ Below you'll find some sample tests I've conducted as well as their result
 
 ### Kanye West vs J Cole (Popularity)
 
-![Kanye vs J Cole](./plots/comparison-testing-popularity-J_Cole>Kanye_West-.png)
+![Kanye vs J Cole](./plots/comparison-testing-popularity-Kanye_West>J_Cole-.png)
 
 ##### __Fail to Reject Null Hypothesis__
 

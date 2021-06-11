@@ -120,7 +120,6 @@ def GetTwoArtists(artist_one, artist_two, years=None, nofeatures=True, metric='p
 
     return artist_one, artist_two
 
-
 tracks_data = pd.read_csv('../data/tracks.csv')
 tracks_data['artists'] = tracks_data.apply(ArtistsFormatting, axis=1)
 tracks_data['duration'] = tracks_data['duration_ms'].apply(lambda x: x / 60000)
@@ -129,8 +128,15 @@ tracks_data.drop('id_artists', axis=1,inplace=True)
 tracks_data.drop('duration_ms', axis=1,inplace=True)
 
 
-spotify.Scatter(tracks_data, metrics=['explicit', 'danceability', 'duration'], save=True)
+spotify.Hist(tracks_data, metrics=['duration'])
 
+spotify.JointPlot(tracks_data, 'danceability', 'release_year')
+
+spotify.Scatter(tracks_data, metrics=['explicit', 'danceability', 'duration'], save=True, sample=0.01)
+
+spotify.BoxPlot(tracks_data, metrics=['danceability'], save=True, nameAppend="danceability", showfliers=False)
+
+spotify.Scatter(tracks_data, metrics=['explicit'])
 
 # <editor-fold> Popularity 0 vs Popularity Non 0
 
@@ -207,7 +213,7 @@ duration_norm_x = np.linspace(26.7, 27.8, 100000)
 fig, ax = plt.subplots(1, figsize=(7, 7))
 ax.plot(duration_norm_x, duration_ltefive_norm.pdf(duration_norm_x), label="Duration <= 5")
 ax.plot(duration_norm_x, duration_gtfive_norm.pdf(duration_norm_x), label="Duration > 5")
-duration_norm_pvalue = stats.ttest_ind(tracks_data[tracks_data['duration'] <= 5]['popularity'], tracks_data[tracks_data['duration'] > 5]['popularity'], equal_var=False).pvalue / 2
+duration_norm_pvalue = round(stats.ttest_ind(tracks_data[tracks_data['duration'] <= 5]['popularity'], tracks_data[tracks_data['duration'] > 5]['popularity'], equal_var=False).pvalue / 2, 3)
 ax.text(0.1, 0.8, f'p-value: {(duration_norm_pvalue)}', fontsize=14, transform=ax.transAxes, bbox=dict(boxstyle='round', facecolor='orange', alpha=0.5))
 ax.set_xlabel('Popularity')
 ax.set_title('Duration vs Popularity')
@@ -222,6 +228,7 @@ fig
 # </editor-fold>
 
 tracks_data_ltfive = tracks_data[tracks_data['duration'] <= 5].copy()
+
 # fix error in data
 tracks_data_ltfive.loc[tracks_data_ltfive['id'] == '74CSJTE5QQp1e4bHzm3wti', 'release_year'] = 2019
 
@@ -243,6 +250,9 @@ fig
 
 averages = tracks_data_ltfive.groupby('release_year').mean()
 
+averages_norm = averages / tracks_data_ltfive.groupby('release_year').count()
+
+spotify.Years(averages_norm, metrics=['explicit', 'popularity', 'danceability', 'duration'], sameax=False, save=True, nameAppend="plotted-together-years-norm")
 spotify.Years(averages, metrics=['explicit', 'popularity', 'danceability', 'duration'], sameax=False, save=True, nameAppend="plotted-together-years")
 # </editor-fold>
 
@@ -281,6 +291,10 @@ tracks_this_year_norm.ppf([0.025, 0.975])
 # Bootstrap in order to check confidence interval
 # H0: Drake popularity = G Herbo popularity
 # HA: Drake popularity > G Herbo
+
+GetTwoArtists('Kanye West', 'J Cole', metric='popularity', save=True, nofeatures=False)
+GetTwoArtists('XXX Tentacion', 'Juice World', metric='popularity', save=True, nofeatures=False)
+
 
 GetTwoArtists('Bad Bunny', 'J Balvin', metric='danceability', save=True, nofeatures=False)
 
