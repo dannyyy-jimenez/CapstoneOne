@@ -1,5 +1,7 @@
 # Spotify Tracks 1922-2020
 
+CHECK OUT MY **[SLIDESHOW PRESENTATION ON MY DATA](https://docs.google.com/presentation/d/1cttccW1RLlrmLTyCdcZ3ZJ5WHiBDWvAYIgO6gkWdqj4/edit?usp=sharing)** 
+
 NOTE: The data folder is not in this repo due to GitHub's size limit, **[here](https://www.kaggle.com/yamaerenay/spotify-dataset-19212020-160k-tracks)** is where you can find the tracks.csv file needed for this project to run.
 
 NOTE: The Spotify API auth key is also missing for security purposes. In order to get your own Spotify API key follow **[these instructions](https://developer.spotify.com/documentation/web-api/quick-start/)**
